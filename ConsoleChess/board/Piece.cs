@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace ConsoleChess.board
+﻿namespace ConsoleChess.board
 {
     public class Piece
     {
         public Position Position { get; set; }
-        public Color Color{ get; set; }
+        public Color Color { get; set; }
         public int NumberOfMovements { get; set; }
-        public Board Board{ get; set; }
+        public Board Board { get; set; }
 
-        public Piece(Position position, Color color, int numberOfMovements, Board board)
+        public Piece(Board board, Color color)
         {
-            Position = position;
+            Position = null;
             Color = color;
-            NumberOfMovements = numberOfMovements;
+            NumberOfMovements = 0;
             Board = board;
         }
     }

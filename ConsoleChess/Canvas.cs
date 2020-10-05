@@ -1,7 +1,5 @@
 ﻿using ConsoleChess.board;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace ConsoleChess
 {
@@ -16,10 +14,12 @@ namespace ConsoleChess
                     if (board.Piece(i, j) == null)
                         Console.Write("- ");
                     else
+                    {
                         Console.Write(board.Piece(i, j) + " ");
+                    }
                 }
                 Console.WriteLine();
             }
-        }
+        }        
     }
 }

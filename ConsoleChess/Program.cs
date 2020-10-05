@@ -1,5 +1,5 @@
-﻿using ConsoleChess.board;
-using ConsoleChess.chess;
+﻿using board;
+using chess;
 
 namespace ConsoleChess
 {
@@ -7,11 +7,9 @@ namespace ConsoleChess
     {
         static void Main(string[] args)
         {
-            Board board = new Board(8,8);
-            board.PutPiece(new Tower(board, Color.White), new Position(0, 0));
-            board.PutPiece(new King(board, Color.White), new Position(7, 4));
-
-            Canvas.PrintBoard(board);
+            ChessPositon pos = new ChessPositon('a', 1);
+            System.Console.WriteLine(pos);
+            System.Console.WriteLine(pos.ToPosition());
         }
     }
 }

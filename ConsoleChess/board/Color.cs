@@ -1,5 +1,8 @@
-﻿namespace ConsoleChess.board
+﻿namespace board
 {
+    /// <summary>
+    /// Colors
+    /// </summary>
     public enum Color
     {
         White,

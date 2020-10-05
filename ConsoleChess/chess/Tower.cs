@@ -1,9 +1,6 @@
-﻿using ConsoleChess.board;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using board;
 
-namespace ConsoleChess.chess
+namespace chess
 {
     class Tower : Piece
     {

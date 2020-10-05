@@ -1,6 +1,6 @@
-﻿using ConsoleChess.board;
+﻿using board;
 
-namespace ConsoleChess.chess
+namespace chess
 {
     public class King : Piece
     {

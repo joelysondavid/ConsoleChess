@@ -1,29 +1,59 @@
-﻿namespace ConsoleChess.board
+﻿namespace board
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Board
     {
         public int Rows { get; set; }
         public int Columns { get; set; }
-        private Piece[,] pieces { get; set; }
+        private Piece[,] Pieces { get; set; }
 
         public Board(int rows, int columns)
         {
             Rows = rows;
             Columns = columns;
 
-            pieces = new Piece[rows, columns];
+            Pieces = new Piece[rows, columns];
         }
 
         public Piece Piece(int row, int column)
         {
-            return pieces[row, column];
+            return Pieces[row, column];
+        }
+
+        public Piece Piece(Position position)
+        {
+            return Pieces[position.Row, position.Column];
+        }
+
+        public bool ExistsPiece(Position position)
+        {
+            ValidatePosition(position);
+            return Piece(position) != null;
         }
 
         public void PutPiece(Piece piece, Position position)
         {
-            pieces[position.Row, position.Column] = piece;
+            if (ExistsPiece(position))
+                throw new BoardException("There's already a piece in this position!");
 
+            Pieces[position.Row, position.Column] = piece;
             piece.Position = position;
+        }
+
+        public bool PositionIsValid(Position position)
+        {
+            if ((position.Row < 0 || position.Row > Rows) || (position.Column < 0 || position.Column > Columns))
+                return false;
+
+            return true;
+        }
+
+        public void ValidatePosition(Position position)
+        {
+            if (!PositionIsValid(position))
+                throw new BoardException("Position is invalid!");
         }
     }
 }

@@ -6,9 +6,8 @@ namespace ConsoleChess
     {
         static void Main(string[] args)
         {
-            Position p = new Position(3,4);
-
-            System.Console.WriteLine(p);
+            Board board = new Board(8,8);
+            Canvas.PrintBoard(board);
         }
     }
 }

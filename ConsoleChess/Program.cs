@@ -7,9 +7,12 @@ namespace ConsoleChess
     {
         static void Main(string[] args)
         {
-            ChessPositon pos = new ChessPositon('a', 1);
-            System.Console.WriteLine(pos);
-            System.Console.WriteLine(pos.ToPosition());
+            Board board = new Board(8, 8);
+            board.PutPiece(new Tower(board, Color.Black), new Position(0, 0));
+            board.PutPiece(new Tower(board, Color.Black), new Position(0, 7));
+            board.PutPiece(new Tower(board, Color.Black), new Position(7, 0));
+
+            Canvas.PrintBoard(board);
         }
     }
 }

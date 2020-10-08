@@ -1,11 +1,19 @@
 ﻿using board;
+using chess;
 using System;
 using System.ComponentModel;
 
 namespace ConsoleChess
 {
+    /// <summary>
+    /// Object to represents the screen
+    /// </summary>
     public class Canvas
     {
+        /// <summary>
+        /// Drawing the board
+        /// </summary>
+        /// <param name="board"></param>
         public static void PrintBoard(Board board)
         {
             for (int i = 0; i < board.Rows; i++)
@@ -14,16 +22,7 @@ namespace ConsoleChess
                 for (int j = 0; j < board.Columns; j++)
                 {
                     Console.BackgroundColor = PrintBackChess(i, j);
-                    if (board.Piece(i, j) == null)
-                    {
-
-                        Console.Write("- ");
-                    }
-                    else
-                    {
-                        PrintPiece(board.Piece(i, j));
-                        Console.Write(" ");
-                    }
+                    PrintPiece(board.Piece(i, j));
                 }
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.WriteLine();
@@ -32,17 +31,37 @@ namespace ConsoleChess
         }
 
         /// <summary>
-        /// Sets the background color of the field
+        /// Drawing the board
         /// </summary>
-        /// <param name="line">Line field</param>
-        /// <param name="column">Column field</param>
-        /// <returns></returns>
-        private static ConsoleColor PrintBackChess(int line, int column)
+        /// <param name="board"></param>
+        public static void PrintBoard(Board board, bool[,] possiblesMovements)
         {
-            if ((line % 2 == 0 && column % 2 == 0) || (line % 2 != 0 && column % 2 != 0))
-                return Console.BackgroundColor = ConsoleColor.White;
-            else
-                return Console.BackgroundColor = ConsoleColor.Black;
+            for (int i = 0; i < board.Rows; i++)
+            {
+                Console.Write(board.Rows - i + "| ");
+                for (int j = 0; j < board.Columns; j++)
+                {
+                    Console.BackgroundColor = PrintBackChess(i, j, possiblesMovements[i, j]);
+                    PrintPiece(board.Piece(i, j));
+                }
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.WriteLine();
+            }
+            Console.WriteLine("-| A B C D E F G H");
+        }
+
+        /// <summary>
+        /// Read the position of chess
+        /// </summary>
+        /// <returns>Chess position</returns>
+        public static ChessPosition ReadChessPosition()
+        {
+            string positionString = Console.ReadLine();
+
+            char col = positionString[0];
+            int line = int.Parse(positionString[1] + "");
+
+            return new ChessPosition(col, line);
         }
 
         /// <summary>
@@ -51,17 +70,45 @@ namespace ConsoleChess
         /// <param name="piece">Piece</param>
         public static void PrintPiece(Piece piece)
         {
-            if (piece.Color == Color.White)
-            {
-                Console.Write(piece);
-            }
+            ConsoleColor aux = Console.ForegroundColor;
+
+            if (piece == null)
+                Console.Write(" ");
+
+
             else
             {
-                ConsoleColor aux = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Blue;
-                Console.Write(piece);
-                Console.ForegroundColor = aux;
+                if (piece.Color == Color.White)
+                {
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.Write(piece);
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Black;
+                    Console.Write(piece);
+                }
             }
+
+            Console.Write(" ");
+            Console.ForegroundColor = aux;
+        }
+
+        /// <summary>
+        /// Sets the background color of the field
+        /// </summary>
+        /// <param name="line">Line field</param>
+        /// <param name="column">Column field</param>
+        /// <returns></returns>
+        private static ConsoleColor PrintBackChess(int line, int column, bool checksPath = false)
+        {
+            if(checksPath)
+                return Console.BackgroundColor = ConsoleColor.DarkGray;
+
+            if ((line % 2 == 0 && column % 2 == 0) || (line % 2 != 0 && column % 2 != 0))
+                return Console.BackgroundColor = ConsoleColor.DarkYellow;
+            else
+                return Console.BackgroundColor = ConsoleColor.Red;
         }
     }
 }

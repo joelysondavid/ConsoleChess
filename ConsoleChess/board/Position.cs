@@ -26,6 +26,21 @@
             Column = column;
         }
 
+        /// <summary>
+        /// Set the row and column position
+        /// </summary>
+        /// <param name="row">Position row</param>
+        /// <param name="column">Position column</param>
+        public void SetValues(int row, int column)
+        {
+            Row = row;
+            Column = column;
+        }
+
+        /// <summary>
+        /// To string override
+        /// </summary>
+        /// <returns>Line and column position</returns>
         public override string ToString()
         {
             return string.Concat(Row, ", ", Column);

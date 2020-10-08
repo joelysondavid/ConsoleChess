@@ -1,5 +1,6 @@
 ﻿using board;
 using chess;
+using System;
 
 namespace ConsoleChess
 {
@@ -7,12 +8,34 @@ namespace ConsoleChess
     {
         static void Main(string[] args)
         {
-            Board board = new Board(8, 8);
-            board.PutPiece(new Tower(board, Color.Black), new Position(0, 0));
-            board.PutPiece(new Tower(board, Color.Black), new Position(0, 7));
-            board.PutPiece(new Tower(board, Color.Black), new Position(7, 0));
+            try
+            {
+                ChessMatch match = new ChessMatch();
 
-            Canvas.PrintBoard(board);
+                while (!match.FinishedMatch)
+                {
+                    Console.Clear();
+                    Canvas.PrintBoard(match.Board);
+                    Console.Write("Origin: "); 
+                    Position postionOrigin = Canvas.ReadChessPosition().ToPosition();
+
+                    bool[,] possibleMovements = match.Board.Piece(postionOrigin).PossibleMovements();
+
+                    Console.Clear();
+                    Canvas.PrintBoard(match.Board, possibleMovements);
+
+                    Console.Write($"Target: ");
+                    Position positionTarget = Canvas.ReadChessPosition().ToPosition();
+
+                    match.ExecuteMove(postionOrigin, positionTarget);
+
+                    Console.WriteLine();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message); 
+            }
         }
     }
 }

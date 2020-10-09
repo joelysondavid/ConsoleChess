@@ -1,6 +1,7 @@
 ﻿using board;
 using chess;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 namespace ConsoleChess
@@ -10,6 +11,68 @@ namespace ConsoleChess
     /// </summary>
     public class Canvas
     {
+        /// <summary>
+        /// Print match
+        /// </summary>
+        /// <param name="match">Match</param>
+        public static void PrintMatch(ChessMatch match)
+        {
+            Console.Clear();
+            PrintBoard(match.Board);
+            Console.WriteLine();
+
+            ShowCapturedPieces(match.GetCapturedPiecesByColor(Color.White), Color.White);
+            Console.WriteLine();
+            ShowCapturedPieces(match.GetCapturedPiecesByColor(Color.Black), Color.Black);
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Turn: " + match.TotalMoves);
+            Console.WriteLine($"Waiting {match.CurrentPlayer} player");
+
+            Console.WriteLine();
+            Console.Write("Origin: ");
+            Position postionOrigin = ReadChessPosition().ToPosition();
+
+            match.ValidateOriginPosition(postionOrigin);
+
+            bool[,] possibleMovements = match.Board.Piece(postionOrigin).PossibleMovements();
+
+            Console.Clear();
+            PrintBoard(match.Board, possibleMovements);
+
+            Console.WriteLine();
+            Console.Write($"Target: ");
+            Position positionTarget = ReadChessPosition().ToPosition();
+
+            match.ValidatesTargetPosition(postionOrigin, positionTarget);
+
+            match.MakeChessMove(postionOrigin, positionTarget);
+
+            Console.WriteLine();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="capturedPieces"></param>
+        /// <param name="color"></param>
+        public static void ShowCapturedPieces(HashSet<Piece> capturedPieces, Color color)
+        {
+            int cont = 0;
+
+            if (color == Color.Black) Console.ForegroundColor = ConsoleColor.DarkRed;
+            else Console.ForegroundColor = ConsoleColor.DarkYellow;
+            Console.Write("Pieces {0} captured: [ ", color);
+            foreach (var piece in capturedPieces)
+            {
+                Console.Write((cont > 0 ? ", " : "") + piece);
+                cont++;
+            }
+            Console.Write(" ]");
+            Console.ForegroundColor = ConsoleColor.White;
+        }
+
         /// <summary>
         /// Drawing the board
         /// </summary>

@@ -99,7 +99,7 @@
         /// </summary>
         /// <param name="position">Position</param>
         /// <returns>Whether the position is valid or not</returns>
-        public bool PositionIsValid(Position position)
+        public bool IsPositionValid(Position position)
         {
             if ((position.Row < 0 || position.Row >= Rows) || (position.Column < 0 || position.Column >= Columns))
                 return false;
@@ -113,7 +113,7 @@
         /// <param name="position">Position</param>
         public void ValidatePosition(Position position)
         {
-            if (!PositionIsValid(position))
+            if (!IsPositionValid(position))
                 throw new BoardException("Position is invalid!");
         }
     }

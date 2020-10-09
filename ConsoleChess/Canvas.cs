@@ -59,7 +59,12 @@ namespace ConsoleChess
             string positionString = Console.ReadLine();
 
             char col = positionString[0];
-            int line = int.Parse(positionString[1] + "");
+            int line = 0;
+
+            int.TryParse(positionString[1].ToString(), out line);
+
+            if (line < 1)
+                throw new BoardException("Invalid line!");
 
             return new ChessPosition(col, line);
         }
@@ -74,7 +79,6 @@ namespace ConsoleChess
 
             if (piece == null)
                 Console.Write(" ");
-
 
             else
             {
@@ -102,7 +106,7 @@ namespace ConsoleChess
         /// <returns></returns>
         private static ConsoleColor PrintBackChess(int line, int column, bool checksPath = false)
         {
-            if(checksPath)
+            if (checksPath)
                 return Console.BackgroundColor = ConsoleColor.DarkGray;
 
             if ((line % 2 == 0 && column % 2 == 0) || (line % 2 != 0 && column % 2 != 0))

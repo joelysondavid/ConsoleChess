@@ -28,60 +28,60 @@ namespace chess
         {
             bool[,] movements = new bool[Board.Rows, Board.Columns];
 
-            Position position = new Position(Position.Row, Position.Column);
+            Position position = new Position(0, 0);
 
             // N
             position.SetValues(Position.Row - 1, Position.Column);
-            if (Board.PositionIsValid(position) && CanMove(position))
+            if (Board.IsPositionValid(position) && CanMove(position))
             {
                 movements[position.Row, position.Column] = true;
             }
 
             // NE
             position.SetValues(Position.Row - 1, Position.Column + 1);
-            if (Board.PositionIsValid(position) && CanMove(position))
+            if (Board.IsPositionValid(position) && CanMove(position))
             {
                 movements[position.Row, position.Column] = true;
             }
 
             // E
             position.SetValues(Position.Row, Position.Column + 1);
-            if (Board.PositionIsValid(position) && CanMove(position))
+            if (Board.IsPositionValid(position) && CanMove(position))
             {
                 movements[position.Row, position.Column] = true;
             }
 
             // SE
             position.SetValues(Position.Row + 1, Position.Column + 1);
-            if (Board.PositionIsValid(position) && CanMove(position))
+            if (Board.IsPositionValid(position) && CanMove(position))
             {
                 movements[position.Row, position.Column] = true;
             }
 
             // S
             position.SetValues(Position.Row + 1, Position.Column);
-            if (Board.PositionIsValid(position) && CanMove(position))
+            if (Board.IsPositionValid(position) && CanMove(position))
             {
                 movements[position.Row, position.Column] = true;
             }
 
             // SW
             position.SetValues(Position.Row + 1, Position.Column - 1);
-            if (Board.PositionIsValid(position) && CanMove(position))
+            if (Board.IsPositionValid(position) && CanMove(position))
             {
                 movements[position.Row, position.Column] = true;
             }
 
             // W
             position.SetValues(Position.Row, Position.Column - 1);
-            if (Board.PositionIsValid(position) && CanMove(position))
+            if (Board.IsPositionValid(position) && CanMove(position))
             {
                 movements[position.Row, position.Column] = true;
             }
 
             // NW
             position.SetValues(Position.Row - 1, Position.Column - 1);
-            if (Board.PositionIsValid(position) && CanMove(position))
+            if (Board.IsPositionValid(position) && CanMove(position))
             {
                 movements[position.Row, position.Column] = true;
             }

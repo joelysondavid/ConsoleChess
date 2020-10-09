@@ -14,7 +14,6 @@ namespace chess
         /// <param name="color">Color of piece</param>
         public Tower(Board board, Color color) : base(board, color) { }
 
-
         /// <summary>
         /// To string override
         /// </summary>
@@ -32,13 +31,13 @@ namespace chess
         {
             bool[,] movements = new bool[Board.Rows, Board.Columns];
 
-            Position position = new Position(Position.Row, Position.Column);
+            Position position = new Position(0, 0);
 
             // N
             for (int i = Position.Row - 1; i >= 0; i--)
             {
                 position.SetValues(i, Position.Column);
-                if (Board.PositionIsValid(position) && CanMove(position))
+                if (Board.IsPositionValid(position) && CanMove(position))
                 {
                     movements[position.Row, position.Column] = true;
                 }
@@ -51,7 +50,7 @@ namespace chess
             for (int i = Position.Column + 1; i <= 7; i++)
             {
                 position.SetValues(Position.Row, i);
-                if (Board.PositionIsValid(position) && CanMove(position))
+                if (Board.IsPositionValid(position) && CanMove(position))
                 {
                     movements[position.Row, position.Column] = true;
                 }
@@ -64,7 +63,7 @@ namespace chess
             for (int i = Position.Row+1; i <= 7; i++)
             {
                 position.SetValues(i, Position.Column);
-                if (Board.PositionIsValid(position) && CanMove(position))
+                if (Board.IsPositionValid(position) && CanMove(position))
                 {
                     movements[position.Row, position.Column] = true;
                 }
@@ -77,7 +76,7 @@ namespace chess
             for (int i = Position.Column-1; i >= 0; i--)
             {
                 position.SetValues(Position.Row, i);
-                if (Board.PositionIsValid(position) && CanMove(position))
+                if (Board.IsPositionValid(position) && CanMove(position))
                 {
                     movements[position.Row, position.Column] = true;
                 }

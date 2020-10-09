@@ -47,6 +47,26 @@
         }
 
         /// <summary>
+        /// Checks if the piece is pray
+        /// </summary>
+        /// <returns>If the piece has any possible movement</returns>
+        public bool IsPieceStuck()
+        {
+            bool[,] exists = PossibleMovements();
+
+            for (int i = 0; i < Board.Rows; i++)
+            {
+                for (int j = 0; j < Board.Columns; j++)
+                {
+                    if (exists[i, j])
+                        return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Checks the possibles movements of a piece
         /// </summary>
         /// <returns>List of possible moviments</returns>

@@ -1,6 +1,6 @@
-﻿using ConsoleChess.chess.pieces;
+﻿using board;
 
-namespace board
+namespace chess
 {
     /// <summary>
     /// Piece class

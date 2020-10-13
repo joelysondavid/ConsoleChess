@@ -1,9 +1,6 @@
 ﻿using board;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace ConsoleChess.chess.pieces
+namespace chess
 {
     /// <summary>
     /// Represents a queen

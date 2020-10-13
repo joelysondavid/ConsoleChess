@@ -1,10 +1,12 @@
 ﻿using board;
-using ConsoleChess.chess.pieces;
 using System;
 using System.Collections.Generic;
 
 namespace chess
 {
+    /// <summary>
+    /// represents a game of chess
+    /// </summary>
     public class ChessMatch
     {
         /// <summary>
@@ -139,7 +141,48 @@ namespace chess
             if (capturedPiece != null)
                 CapturedPieces.Add(capturedPiece);
 
+            if (Board.Piece(target) is King && ((target.Column + 2 == origin.Column) || (target.Column - 2 == origin.Column)))
+                ExecuteCastling(Board.Piece(target));
+
             return capturedPiece;
+        }
+
+        /// <summary>
+        /// Checks if last play was a castling and move the respective tower
+        /// </summary>
+        /// <param name="king">King</param>
+        private void ExecuteCastling(Piece king)
+        {
+            Piece tower = null;
+            Position origin = null;
+            Position target = null;
+            if (king.Position.Column == 6)
+            {
+                tower = Board.Piece(king.Position.Row, king.Position.Column + 1);
+                if (tower.NumberOfMovements == 0)
+                {
+                    origin = tower.Position;
+                    target = new Position(king.Position.Row, king.Position.Column - 1);
+                    Board.RemovePiece(origin);
+                    Board.PutPiece(tower, target);
+                    tower.IncrementMovements();
+                }
+            }
+            else if (king.Position.Column == 2)
+            {
+                tower = Board.Piece(king.Position.Row, king.Position.Column - 2);
+                if (tower.NumberOfMovements == 0)
+                {
+                    origin = tower.Position;
+                    target = new Position(king.Position.Row, king.Position.Column + 1);
+                    Board.RemovePiece(origin);
+                    Board.PutPiece(tower, target);
+                    tower.IncrementMovements();
+                }
+            }
+
+            if (KingIsCheck(king.Color) && origin != null)
+                UndoMovement(origin, target, null);
         }
 
         /// <summary>
@@ -185,6 +228,11 @@ namespace chess
             return false;
         }
 
+        /// <summary>
+        /// Checks if the match is a checkmate
+        /// </summary>
+        /// <param name="color"></param>
+        /// <returns></returns>
         public bool IsInCheckmate(Color color)
         {
             if (!KingIsCheck(color))
@@ -291,7 +339,7 @@ namespace chess
             PutPiece(new Knight(Board, Color.Black), 'b', 8);
             PutPiece(new Bishop(Board, Color.Black), 'c', 8);
             PutPiece(new Queen(Board, Color.Black), 'd', 8);
-            PutPiece(new King(Board, Color.Black), 'e', 8);
+            PutPiece(new King(Board, Color.Black, this), 'e', 8);
             PutPiece(new Bishop(Board, Color.Black), 'f', 8);
             PutPiece(new Knight(Board, Color.Black), 'g', 8);
             PutPiece(new Tower(Board, Color.Black), 'h', 8);
@@ -309,7 +357,7 @@ namespace chess
             PutPiece(new Knight(Board, Color.White), 'b', 1);
             PutPiece(new Bishop(Board, Color.White), 'c', 1);
             PutPiece(new Queen(Board, Color.White), 'd', 1);
-            PutPiece(new King(Board, Color.White), 'e', 1);
+            PutPiece(new King(Board, Color.White, this), 'e', 1);
             PutPiece(new Bishop(Board, Color.White), 'f', 1);
             PutPiece(new Knight(Board, Color.White), 'g', 1);
             PutPiece(new Tower(Board, Color.White), 'h', 1);

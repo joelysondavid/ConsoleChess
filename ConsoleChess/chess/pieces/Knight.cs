@@ -1,7 +1,6 @@
 ﻿using board;
-using System;
 
-namespace ConsoleChess.chess.pieces
+namespace chess
 {
     /// <summary>
     /// Represents the knight piece

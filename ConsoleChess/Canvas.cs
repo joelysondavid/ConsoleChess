@@ -1,14 +1,12 @@
 ﻿using board;
 using chess;
-using ConsoleChess.chess.pieces;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 
 namespace ConsoleChess
 {
     /// <summary>
-    /// Object to represents the screen
+    /// Object that represents the screen
     /// </summary>
     public class Canvas
     {

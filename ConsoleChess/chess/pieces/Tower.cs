@@ -5,7 +5,7 @@ namespace chess
     /// <summary>
     /// Tower
     /// </summary>
-    class Tower : Piece
+    public class Tower : Piece
     {
         /// <summary>
         /// Simple constructor
@@ -21,6 +21,14 @@ namespace chess
         public override string ToString()
         {
             return "R";
+        }
+
+        /// <summary>
+        /// Castling
+        /// </summary>
+        public void SetCastling(Position position)
+        {
+            Position = position;
         }
 
         /// <summary>
@@ -60,7 +68,7 @@ namespace chess
             }
 
             // S
-            for (int i = Position.Row+1; i <= 7; i++)
+            for (int i = Position.Row + 1; i <= 7; i++)
             {
                 position.SetValues(i, Position.Column);
                 if (Board.IsPositionValid(position) && CanMove(position))
@@ -73,7 +81,7 @@ namespace chess
             }
 
             // W
-            for (int i = Position.Column-1; i >= 0; i--)
+            for (int i = Position.Column - 1; i >= 0; i--)
             {
                 position.SetValues(Position.Row, i);
                 if (Board.IsPositionValid(position) && CanMove(position))

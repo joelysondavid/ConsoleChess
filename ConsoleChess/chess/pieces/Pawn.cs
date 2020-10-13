@@ -1,7 +1,6 @@
 ﻿using board;
-using Microsoft.VisualBasic;
 
-namespace ConsoleChess.chess.pieces
+namespace chess
 {
     /// <summary>
     /// Represents a pawn

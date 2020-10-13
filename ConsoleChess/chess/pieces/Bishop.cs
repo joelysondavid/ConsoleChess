@@ -1,7 +1,6 @@
 ﻿using board;
-using System;
 
-namespace ConsoleChess.chess.pieces
+namespace chess
 {
     /// <summary>
     /// Represents a bishop
@@ -33,6 +32,7 @@ namespace ConsoleChess.chess.pieces
             bool[,] possiblesMovements = new bool[Board.Rows, Board.Columns];
             Position position = new Position(0, 0);
 
+            // NW
             for (int i = Board.Rows - 1; i >= 0; i--)
             {
                 for (int j = Board.Columns - 1; j >= 0; j--)
@@ -48,6 +48,7 @@ namespace ConsoleChess.chess.pieces
                 }
             }
 
+            // SE
             for (int i = 0; i <= Board.Rows; i++)
             {
                 for (int j = 0; j <= Board.Columns; j++)
@@ -63,6 +64,7 @@ namespace ConsoleChess.chess.pieces
                 }
             }
 
+            // NE
             for (int i = Board.Rows - 1; i >= 0; i--)
             {
                 for (int j = Board.Columns - 1; j >= 0; j--)
@@ -78,6 +80,7 @@ namespace ConsoleChess.chess.pieces
                 }
             }
 
+            // SW
             for (int i = 0; i <= Board.Rows; i++)
             {
                 for (int j = 0; j <= Board.Columns; j++)

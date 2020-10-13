@@ -1,4 +1,6 @@
-﻿namespace board
+﻿using chess;
+
+namespace board
 {
     /// <summary>
     /// Object respresenting a Board

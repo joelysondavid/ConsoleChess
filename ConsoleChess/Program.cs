@@ -1,6 +1,7 @@
 ﻿using board;
 using chess;
 using System;
+using System.Runtime.InteropServices;
 
 namespace ConsoleChess
 {
@@ -23,6 +24,7 @@ namespace ConsoleChess
                         Console.WriteLine(ex.Message);
                         Console.WriteLine("Try again.");
                         Console.ReadLine();
+                        Console.Clear();
                     }
                 }
             }

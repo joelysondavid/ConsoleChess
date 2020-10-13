@@ -1,5 +1,6 @@
 ﻿using board;
 using chess;
+using ConsoleChess.chess.pieces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -17,39 +18,54 @@ namespace ConsoleChess
         /// <param name="match">Match</param>
         public static void PrintMatch(ChessMatch match)
         {
-            Console.Clear();
             PrintBoard(match.Board);
             Console.WriteLine();
 
             ShowCapturedPieces(match.GetCapturedPiecesByColor(Color.White), Color.White);
             Console.WriteLine();
             ShowCapturedPieces(match.GetCapturedPiecesByColor(Color.Black), Color.Black);
-
             Console.WriteLine();
+
+            match.IsInCheckmate(match.CurrentPlayer);
+
             Console.WriteLine();
             Console.WriteLine("Turn: " + match.TotalMoves);
-            Console.WriteLine($"Waiting {match.CurrentPlayer} player");
+            if (!match.FinishedMatch)
+            {
+                Console.WriteLine($"Waiting {match.CurrentPlayer} player");
 
-            Console.WriteLine();
-            Console.Write("Origin: ");
-            Position postionOrigin = ReadChessPosition().ToPosition();
+                Console.WriteLine();
 
-            match.ValidateOriginPosition(postionOrigin);
+                if (match.IsCheck)
+                {
+                    Console.WriteLine("You are in check");
+                }
 
-            bool[,] possibleMovements = match.Board.Piece(postionOrigin).PossibleMovements();
+                Console.WriteLine();
+                Console.Write("Origin: ");
+                Position postionOrigin = ReadChessPosition().ToPosition();
 
-            Console.Clear();
-            PrintBoard(match.Board, possibleMovements);
+                match.ValidateOriginPosition(postionOrigin);
 
-            Console.WriteLine();
-            Console.Write($"Target: ");
-            Position positionTarget = ReadChessPosition().ToPosition();
+                bool[,] possibleMovements = match.Board.Piece(postionOrigin).PossibleMovements();
 
-            match.ValidatesTargetPosition(postionOrigin, positionTarget);
+                Console.Clear();
+                PrintBoard(match.Board, possibleMovements);
 
-            match.MakeChessMove(postionOrigin, positionTarget);
+                Console.WriteLine();
+                Console.Write($"Target: ");
+                Position positionTarget = ReadChessPosition().ToPosition();
 
-            Console.WriteLine();
+                match.ValidatesTargetPosition(postionOrigin, positionTarget);
+
+                match.MakeChessMove(postionOrigin, positionTarget);
+                Console.Clear();
+            }
+            else
+            {
+                Console.WriteLine("CHECKEMATE!");
+                Console.WriteLine($"{match.CurrentPlayer} Wins!");
+            }
         }
 
         /// <summary>
@@ -63,13 +79,13 @@ namespace ConsoleChess
 
             if (color == Color.Black) Console.ForegroundColor = ConsoleColor.DarkRed;
             else Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.Write("Pieces {0} captured: [ ", color);
+            Console.Write("Pieces {0} captured: [x ", color);
             foreach (var piece in capturedPieces)
             {
                 Console.Write((cont > 0 ? ", " : "") + piece);
                 cont++;
             }
-            Console.Write(" ]");
+            Console.Write(" x]");
             Console.ForegroundColor = ConsoleColor.White;
         }
 
@@ -90,7 +106,7 @@ namespace ConsoleChess
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.WriteLine();
             }
-            Console.WriteLine("-| A B C D E F G H");
+            Console.WriteLine("-| a b c d e f g h");
         }
 
         /// <summary>
@@ -110,7 +126,7 @@ namespace ConsoleChess
                 Console.BackgroundColor = ConsoleColor.Black;
                 Console.WriteLine();
             }
-            Console.WriteLine("-| A B C D E F G H");
+            Console.WriteLine("-| a b c d e f g h");
         }
 
         /// <summary>

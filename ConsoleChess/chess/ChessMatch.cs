@@ -1,4 +1,6 @@
 ﻿using board;
+using ConsoleChess.chess.pieces;
+using System;
 using System.Collections.Generic;
 
 namespace chess
@@ -28,12 +30,17 @@ namespace chess
         /// <summary>
         /// All pieces
         /// </summary>
-        private HashSet<Piece> pieces;
+        public HashSet<Piece> Pieces { get; private set; }
 
         /// <summary>
         /// Captured pieces
         /// </summary>
-        private HashSet<Piece> capturedPieces;
+        public HashSet<Piece> CapturedPieces { get; private set; }
+
+        /// <summary>
+        /// This match is check?
+        /// </summary>
+        public bool IsCheck { get; set; }
 
         /// <summary>
         /// builder to start the match
@@ -43,8 +50,9 @@ namespace chess
             Board = new Board(8, 8);
             TotalMoves = 1;
             CurrentPlayer = Color.White;
-            pieces = new HashSet<Piece>();
-            capturedPieces = new HashSet<Piece>();
+            Pieces = new HashSet<Piece>();
+            CapturedPieces = new HashSet<Piece>();
+            IsCheck = false;
             BuildPieces();
         }
 
@@ -101,9 +109,17 @@ namespace chess
         /// <param name="target">To</param>
         public void MakeChessMove(Position origin, Position target)
         {
-            ExecuteMove(origin, target);
-            TotalMoves++;
+            Piece captured = ExecuteMove(origin, target);
 
+            if (KingIsCheck(CurrentPlayer))
+            {
+                UndoMovement(origin, target, captured);
+                throw new BoardException($"You can't put yourself in check");
+            }
+
+            IsCheck = KingIsCheck(GetEnemy(CurrentPlayer)) ? true : false;
+
+            TotalMoves++;
             CurrentPlayer = CurrentPlayer == Color.Black ? Color.White : Color.Black;
         }
 
@@ -112,17 +128,95 @@ namespace chess
         /// </summary>
         /// <param name="origin">Origin of piece</param>
         /// <param name="target">Target position</param>
-        public void ExecuteMove(Position origin, Position target)
+        public Piece ExecuteMove(Position origin, Position target)
         {
             Piece piece = Board.RemovePiece(origin);
             Piece capturedPiece = Board.RemovePiece(target);
             Board.PutPiece(piece, target);
+
             piece.IncrementMovements();
 
             if (capturedPiece != null)
-                capturedPieces.Add(capturedPiece);
+                CapturedPieces.Add(capturedPiece);
+
+            return capturedPiece;
         }
 
+        /// <summary>
+        /// Undo the movement itself that would put in check
+        /// </summary>
+        /// <param name="piece">Current piece</param>
+        /// <param name="capturedPiece">Captured piece</param>
+        /// <param name="origin">Origin of current piece</param>
+        private void UndoMovement(Position origin, Position target, Piece captured)
+        {
+            Piece piece = Board.RemovePiece(target);
+
+            piece.DecrementMovements();
+
+            if (captured != null)
+            {
+                Board.PutPiece(captured, target);
+                CapturedPieces.Remove(captured);
+            }
+
+            Board.PutPiece(piece, origin);
+        }
+
+        /// <summary>
+        /// Go through a chess board checking if king is checkmate
+        /// </summary>
+        /// <returns>If the king is in check</returns>
+        public bool KingIsCheck(Color color)
+        {
+            Piece king = GetKing(color);
+
+            if (king == null)
+                throw new BoardException($"There is no {color} king on board");
+
+            foreach (Piece p in AvaliablePiecesByColor(GetEnemy(color)))
+            {
+                bool[,] movements = p.PossibleMovements();
+
+                if (movements[king.Position.Row, king.Position.Column])
+                    return true;
+            }
+
+            return false;
+        }
+
+        public bool IsInCheckmate(Color color)
+        {
+            if (!KingIsCheck(color))
+                return false;
+
+            foreach (Piece p in AvaliablePiecesByColor(color))
+            {
+                bool[,] moves = p.PossibleMovements();
+
+                for (int i = 0; i < Board.Rows; i++)
+                {
+                    for (int j = 0; j < Board.Columns; j++)
+                    {
+                        if (moves[i, j])
+                        {
+                            Position origin = p.Position;
+                            Position target = new Position(i, j);
+                            Piece captured = ExecuteMove(p.Position, target);
+                            if (!KingIsCheck(color))
+                            {
+                                UndoMovement(origin, target, captured);
+                                return false;
+                            }
+                            UndoMovement(origin, target, captured);
+                        }
+                    }
+                }
+            }
+
+            FinishedMatch = true;
+            return true;
+        }
 
         /// <summary>
         /// Get captured pices by informed color
@@ -132,7 +226,7 @@ namespace chess
         public HashSet<Piece> GetCapturedPiecesByColor(Color color)
         {
             HashSet<Piece> pieces = new HashSet<Piece>();
-            foreach (Piece piece in capturedPieces)
+            foreach (Piece piece in CapturedPieces)
             {
                 if (piece.Color == color)
                     pieces.Add(piece);
@@ -149,7 +243,7 @@ namespace chess
         public HashSet<Piece> AvaliablePiecesByColor(Color color)
         {
             HashSet<Piece> pieces = new HashSet<Piece>();
-            foreach (Piece piece in pieces)
+            foreach (Piece piece in Pieces)
             {
                 if (piece.Color == color)
                     pieces.Add(piece);
@@ -160,20 +254,73 @@ namespace chess
         }
 
         /// <summary>
+        /// Get enemy
+        /// </summary>
+        /// <param name="color">Current color</param>
+        /// <returns>Enemy this current color</returns>
+        public Color GetEnemy(Color color)
+        {
+            if (color is Color.Black)
+                return Color.White;
+            else return Color.Black;
+        }
+
+        /// <summary>
+        /// Get King of desired color
+        /// </summary>
+        /// <param name="color">Desired color</param>
+        /// <returns>King thos color</returns>
+        public Piece GetKing(Color color)
+        {
+            foreach (Piece p in AvaliablePiecesByColor(color))
+            {
+                if (p is King)
+                    return p;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Sets initial position of pices on the board.
         /// </summary>
         private void BuildPieces()
         {
-            // Whites
-            PutPiece(new Tower(Board, Color.White), 'a', 8);
-            PutPiece(new Tower(Board, Color.White), 'h', 8);
-            PutPiece(new King(Board, Color.White), 'd', 8);
-
-
             // Blacks
-            PutPiece(new Tower(Board, Color.Black), 'a', 1);
-            PutPiece(new Tower(Board, Color.Black), 'h', 1);
-            PutPiece(new King(Board, Color.Black), 'c', 1);
+            PutPiece(new Tower(Board, Color.Black), 'a', 8);
+            PutPiece(new Knight(Board, Color.Black), 'b', 8);
+            PutPiece(new Bishop(Board, Color.Black), 'c', 8);
+            PutPiece(new Queen(Board, Color.Black), 'd', 8);
+            PutPiece(new King(Board, Color.Black), 'e', 8);
+            PutPiece(new Bishop(Board, Color.Black), 'f', 8);
+            PutPiece(new Knight(Board, Color.Black), 'g', 8);
+            PutPiece(new Tower(Board, Color.Black), 'h', 8);
+            PutPiece(new Pawn(Board, Color.Black), 'a', 7);
+            PutPiece(new Pawn(Board, Color.Black), 'b', 7);
+            PutPiece(new Pawn(Board, Color.Black), 'c', 7);
+            PutPiece(new Pawn(Board, Color.Black), 'd', 7);
+            PutPiece(new Pawn(Board, Color.Black), 'e', 7);
+            PutPiece(new Pawn(Board, Color.Black), 'f', 7);
+            PutPiece(new Pawn(Board, Color.Black), 'g', 7);
+            PutPiece(new Pawn(Board, Color.Black), 'h', 7);
+
+            // Whites
+            PutPiece(new Tower(Board, Color.White), 'a', 1);
+            PutPiece(new Knight(Board, Color.White), 'b', 1);
+            PutPiece(new Bishop(Board, Color.White), 'c', 1);
+            PutPiece(new Queen(Board, Color.White), 'd', 1);
+            PutPiece(new King(Board, Color.White), 'e', 1);
+            PutPiece(new Bishop(Board, Color.White), 'f', 1);
+            PutPiece(new Knight(Board, Color.White), 'g', 1);
+            PutPiece(new Tower(Board, Color.White), 'h', 1);
+            PutPiece(new Pawn(Board, Color.White), 'a', 2);
+            PutPiece(new Pawn(Board, Color.White), 'b', 2);
+            PutPiece(new Pawn(Board, Color.White), 'c', 2);
+            PutPiece(new Pawn(Board, Color.White), 'd', 2);
+            PutPiece(new Pawn(Board, Color.White), 'e', 2);
+            PutPiece(new Pawn(Board, Color.White), 'f', 2);
+            PutPiece(new Pawn(Board, Color.White), 'g', 2);
+            PutPiece(new Pawn(Board, Color.White), 'h', 2);
         }
 
         /// <summary>
@@ -185,7 +332,7 @@ namespace chess
         private void PutPiece(Piece piece, char column, int line)
         {
             Board.PutPiece(piece, new ChessPosition(column, line).ToPosition());
-            pieces.Add(piece);
+            Pieces.Add(piece);
         }
     }
 }

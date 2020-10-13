@@ -77,13 +77,13 @@ namespace ConsoleChess
 
             if (color == Color.Black) Console.ForegroundColor = ConsoleColor.DarkRed;
             else Console.ForegroundColor = ConsoleColor.DarkYellow;
-            Console.Write("Pieces {0} captured: [x ", color);
+            Console.Write("Pieces {0} captured: [ ", color);
             foreach (var piece in capturedPieces)
             {
                 Console.Write((cont > 0 ? ", " : "") + piece);
                 cont++;
             }
-            Console.Write(" x]");
+            Console.Write(" ]");
             Console.ForegroundColor = ConsoleColor.White;
         }
 

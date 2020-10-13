@@ -1,5 +1,4 @@
 ﻿using board;
-using System;
 using System.Collections.Generic;
 
 namespace chess
@@ -45,6 +44,11 @@ namespace chess
         public bool IsCheck { get; set; }
 
         /// <summary>
+        /// En Passant
+        /// </summary>
+        public Piece EnableEnPassant { get; private set; }
+
+        /// <summary>
         /// builder to start the match
         /// </summary>
         public ChessMatch()
@@ -55,6 +59,7 @@ namespace chess
             Pieces = new HashSet<Piece>();
             CapturedPieces = new HashSet<Piece>();
             IsCheck = false;
+            EnableEnPassant = null;
             BuildPieces();
         }
 
@@ -123,6 +128,12 @@ namespace chess
 
             TotalMoves++;
             CurrentPlayer = CurrentPlayer == Color.Black ? Color.White : Color.Black;
+
+            // Checks if enpassan is enable
+            Piece piece = Board.Piece(target);
+            if (piece != null && piece is Pawn && (piece.Position.Row + 2 == origin.Row || piece.Position.Row - 2 == origin.Row))
+                EnableEnPassant = piece;
+            else EnableEnPassant = null;
         }
 
         /// <summary>
@@ -143,6 +154,9 @@ namespace chess
 
             if (Board.Piece(target) is King && ((target.Column + 2 == origin.Column) || (target.Column - 2 == origin.Column)))
                 ExecuteCastling(Board.Piece(target));
+
+            if (Board.Piece(target) != null && Board.Piece(target) is Pawn && origin.Column != target.Column && capturedPiece == null)
+                capturedPiece = ExecuteEnPassant(Board.Piece(target), origin);
 
             return capturedPiece;
         }
@@ -186,6 +200,17 @@ namespace chess
         }
 
         /// <summary>
+        /// Playmake enpassant
+        /// </summary>
+        /// <param name="piece">Would was a pawn</param>
+        private Piece ExecuteEnPassant(Piece pawn, Position origin)
+        {
+            Piece enemyPawn = Board.Piece(origin.Row, pawn.Position.Column);
+
+            return Board.RemovePiece(enemyPawn.Position);
+        }
+
+        /// <summary>
         /// Undo the movement itself that would put in check
         /// </summary>
         /// <param name="piece">Current piece</param>
@@ -199,8 +224,16 @@ namespace chess
 
             if (captured != null)
             {
-                Board.PutPiece(captured, target);
-                CapturedPieces.Remove(captured);
+                if (captured != EnableEnPassant)
+                {
+                    Board.PutPiece(captured, target);
+                    CapturedPieces.Remove(captured);
+                }
+                else
+                {
+                    Board.PutPiece(captured, new Position(origin.Row, target.Column));
+                    CapturedPieces.Remove(captured);
+                }
             }
 
             Board.PutPiece(piece, origin);
@@ -338,19 +371,19 @@ namespace chess
             PutPiece(new Tower(Board, Color.Black), 'a', 8);
             PutPiece(new Knight(Board, Color.Black), 'b', 8);
             PutPiece(new Bishop(Board, Color.Black), 'c', 8);
-            PutPiece(new Queen(Board, Color.Black), 'd', 8);
-            PutPiece(new King(Board, Color.Black, this), 'e', 8);
+            PutPiece(new Queen(Board, Color.Black), 'e', 8);
+            PutPiece(new King(Board, Color.Black, this), 'd', 8);
             PutPiece(new Bishop(Board, Color.Black), 'f', 8);
             PutPiece(new Knight(Board, Color.Black), 'g', 8);
             PutPiece(new Tower(Board, Color.Black), 'h', 8);
-            PutPiece(new Pawn(Board, Color.Black), 'a', 7);
-            PutPiece(new Pawn(Board, Color.Black), 'b', 7);
-            PutPiece(new Pawn(Board, Color.Black), 'c', 7);
-            PutPiece(new Pawn(Board, Color.Black), 'd', 7);
-            PutPiece(new Pawn(Board, Color.Black), 'e', 7);
-            PutPiece(new Pawn(Board, Color.Black), 'f', 7);
-            PutPiece(new Pawn(Board, Color.Black), 'g', 7);
-            PutPiece(new Pawn(Board, Color.Black), 'h', 7);
+            PutPiece(new Pawn(Board, Color.Black, this), 'a', 7);
+            PutPiece(new Pawn(Board, Color.Black, this), 'b', 7);
+            PutPiece(new Pawn(Board, Color.Black, this), 'c', 7);
+            PutPiece(new Pawn(Board, Color.Black, this), 'd', 7);
+            // PutPiece(new Pawn(Board, Color.Black, this), 'e', 7);
+            PutPiece(new Pawn(Board, Color.Black, this), 'f', 7);
+            PutPiece(new Pawn(Board, Color.Black, this), 'g', 4);
+            PutPiece(new Pawn(Board, Color.Black, this), 'h', 7);
 
             // Whites
             PutPiece(new Tower(Board, Color.White), 'a', 1);
@@ -361,14 +394,14 @@ namespace chess
             PutPiece(new Bishop(Board, Color.White), 'f', 1);
             PutPiece(new Knight(Board, Color.White), 'g', 1);
             PutPiece(new Tower(Board, Color.White), 'h', 1);
-            PutPiece(new Pawn(Board, Color.White), 'a', 2);
-            PutPiece(new Pawn(Board, Color.White), 'b', 2);
-            PutPiece(new Pawn(Board, Color.White), 'c', 2);
-            PutPiece(new Pawn(Board, Color.White), 'd', 2);
-            PutPiece(new Pawn(Board, Color.White), 'e', 2);
-            PutPiece(new Pawn(Board, Color.White), 'f', 2);
-            PutPiece(new Pawn(Board, Color.White), 'g', 2);
-            PutPiece(new Pawn(Board, Color.White), 'h', 2);
+            PutPiece(new Pawn(Board, Color.White, this), 'a', 2);
+            PutPiece(new Pawn(Board, Color.White, this), 'b', 2);
+            PutPiece(new Pawn(Board, Color.White, this), 'c', 2);
+            //PutPiece(new Pawn(Board, Color.White, this), 'd', 5);
+            PutPiece(new Pawn(Board, Color.White, this), 'e', 5);
+            PutPiece(new Pawn(Board, Color.White, this), 'f', 2);
+            PutPiece(new Pawn(Board, Color.White, this), 'g', 2);
+            PutPiece(new Pawn(Board, Color.White, this), 'h', 2);
         }
 
         /// <summary>

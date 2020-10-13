@@ -8,6 +8,9 @@ namespace chess
     /// </summary>
     public class King : Piece
     {
+        /// <summary>
+        /// Match
+        /// </summary>
         private ChessMatch Match { get; set; }
 
         /// <summary>
@@ -144,9 +147,13 @@ namespace chess
         /// <returns>If this piece is avaliable to playmake</returns>
         private bool TowerToCastling(Position position)
         {
-            Piece piece = Board.Piece(position);
+            if (Board.IsPositionValid(position))
+            {
+                Piece piece = Board.Piece(position);
 
-            return piece != null && piece is Tower && piece.NumberOfMovements == 0 && piece.Color == Color;
+                return piece != null && piece is Tower && piece.NumberOfMovements == 0 && piece.Color == Color;
+            }
+            return false;
         }
     }
 }

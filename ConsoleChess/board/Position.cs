@@ -1,4 +1,7 @@
-﻿namespace board
+﻿using chess;
+using System;
+
+namespace board
 {
     /// <summary>
     /// Position class
@@ -44,6 +47,31 @@
         public override string ToString()
         {
             return string.Concat(Row, ", ", Column);
+        }
+
+        /// <summary>
+        /// Convert to chess position
+        /// </summary>
+        /// <returns></returns>
+        public ChessPosition ToChessPosition()
+        {
+            ColumnChess columnChess = Enum.Parse<ColumnChess>(Column.ToString());
+            return new ChessPosition(Convert.ToChar(columnChess.ToString()), 8 - Row);
+        }
+
+        /// <summary>
+        /// Rrepresents a column
+        /// </summary>
+        private enum ColumnChess
+        {
+            a,
+            b,
+            c,
+            d,
+            e,
+            f,
+            g,
+            h,
         }
     }
 }

@@ -80,64 +80,83 @@ namespace chess
                     break;
             }
 
-            // Diagonal
-            for (int i = Board.Rows - 1; i >= 0; i--)
+            // NW
+            for (int i = Position.Row - 1; i >= 0; i--)
             {
-                for (int j = Board.Columns - 1; j >= 0; j--)
+                for (int j = Position.Column - 1; j >= 0; j--)
                 {
                     position.SetValues(i, j);
-                    if (Board.IsPositionValid(position) && CanMove(position) &&
-                        Position.Row - i == Position.Column - j && (i + j < Position.Row + Position.Column))
+                    Piece p = Board.Piece(i, j);
+                    if (Board.IsPositionValid(position) && Board.ExistsPiece(position) && (p != null & p != this && p.Color == Color))
                     {
+                        i = -1;
+                        break;
+                    }
+                    else if ((Board.IsPositionValid(position) && CanMove(position)) && (
+                        Position.Row - i == Position.Column - j && (i + j < Position.Row + Position.Column)))
+                    {
+
                         possiblesMovements[i, j] = true;
-                        if (Board.ExistsPiece(position))
-                            i = -1;
                     }
                 }
             }
 
-            for (int i = 0; i <= Board.Rows; i++)
+            // SE
+            for (int i = Position.Row + 1; i < Board.Rows; i++)
             {
-                for (int j = 0; j <= Board.Columns; j++)
+                for (int j = Position.Column + 1; j < Board.Columns; j++)
                 {
                     position.SetValues(i, j);
-                    if (Board.IsPositionValid(position) && CanMove(position) &&
+                    Piece p = Board.Piece(i, j);
+                    if (Board.IsPositionValid(position) && Board.ExistsPiece(position) && (p != null & p != this && p.Color == Color))
+                    {
+                        i = Board.Rows;
+                        break;
+                    }
+                    else if (Board.IsPositionValid(position) && CanMove(position) &&
                         Position.Row - i == Position.Column - j && (i + j > Position.Row + Position.Column))
                     {
                         possiblesMovements[i, j] = true;
-                        if (Board.ExistsPiece(position))
-                            i = Board.Rows;
                     }
                 }
             }
 
-            // Inverse diagonal
-            for (int i = Board.Rows - 1; i >= 0; i--)
+            // NE
+            for (int i = Position.Row - 1; i >= 0; i--)
             {
-                for (int j = Board.Columns - 1; j >= 0; j--)
+                for (int j = Position.Column + 1; j < Board.Columns; j++)
                 {
                     position.SetValues(i, j);
+                    Piece p = Board.Piece(i, j);
+                    if (Board.ExistsPiece(position) && (p != null & p != this && p.Color == Color))
+                    {
+                        i = -1;
+                        break;
+                    }
                     if (Board.IsPositionValid(position) && CanMove(position) &&
                         Position.Row + Position.Column == i + j && (i < Position.Row))
                     {
                         possiblesMovements[i, j] = true;
-                        if (Board.ExistsPiece(position))
-                            i = -1;
                     }
                 }
             }
 
-            for (int i = 0; i <= Board.Rows; i++)
+            // SW
+            for (int i = Position.Row + 1; i < Board.Rows; i++)
             {
-                for (int j = 0; j <= Board.Columns; j++)
+                for (int j = Position.Column + 1; j > 0; j--)
                 {
                     position.SetValues(i, j);
+                    Piece p = Board.Piece(i, j);
+                    if (Board.IsPositionValid(position) && Board.ExistsPiece(position) && (p != null & p != this && p.Color == Color))
+                    {
+                        i = Board.Rows;
+                        break;
+                    }
                     if (Board.IsPositionValid(position) && CanMove(position) &&
                         Position.Row + Position.Column == i + j && (j < Position.Column))
                     {
                         possiblesMovements[i, j] = true;
-                        if (Board.ExistsPiece(position))
-                            i = Board.Rows;
                     }
                 }
             }

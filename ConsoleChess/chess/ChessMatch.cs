@@ -377,31 +377,36 @@ namespace chess
         private void BuildPieces()
         {
             // Blacks
-            PutPiece(new Rook(Board, Color.Black), 'a', 8);
-            PutPiece(new Knight(Board, Color.Black), 'b', 8);
-            PutPiece(new Bishop(Board, Color.Black), 'c', 8);
+            //PutPiece(new Rook(Board, Color.Black), 'a', 8);
+            //PutPiece(new Knight(Board, Color.Black), 'b', 8);
+            //PutPiece(new Bishop(Board, Color.Black), 'c', 8);
             PutPiece(new Queen(Board, Color.Black), 'e', 8);
             PutPiece(new King(Board, Color.Black, this), 'd', 8);
-            PutPiece(new Bishop(Board, Color.Black), 'f', 8);
-            PutPiece(new Knight(Board, Color.Black), 'g', 8);
+            //PutPiece(new Bishop(Board, Color.Black), 'f', 8);
+            PutPiece(new Bishop(Board, Color.Black), 'd', 5);
+            //PutPiece(new Knight(Board, Color.Black), 'g', 8);
             PutPiece(new Rook(Board, Color.Black), 'h', 8);
             PutPiece(new Pawn(Board, Color.Black, this), 'a', 7);
+            //PutPiece(new Pawn(Board, Color.Black, this), 'b', 7);
+            // PutPiece(new Pawn(Board, Color.Black, this), 'c', 7);
+            // PutPiece(new Pawn(Board, Color.Black, this), 'd', 7);
+            // PutPiece(new Pawn(Board, Color.Black, this), 'e', 7);
+            // PutPiece(new Pawn(Board, Color.Black, this), 'f', 7);
             PutPiece(new Pawn(Board, Color.Black, this), 'b', 7);
-            PutPiece(new Pawn(Board, Color.Black, this), 'c', 7);
-            PutPiece(new Pawn(Board, Color.Black, this), 'd', 7);
-            PutPiece(new Pawn(Board, Color.Black, this), 'e', 7);
+            PutPiece(new Pawn(Board, Color.Black, this), 'b', 3);
             PutPiece(new Pawn(Board, Color.Black, this), 'f', 7);
+            PutPiece(new Pawn(Board, Color.Black, this), 'f', 3);
             PutPiece(new Pawn(Board, Color.Black, this), 'g', 7);
             PutPiece(new Pawn(Board, Color.Black, this), 'h', 7);
 
             // Whites
             PutPiece(new Rook(Board, Color.White), 'a', 1);
-            PutPiece(new Knight(Board, Color.White), 'b', 1);
-            PutPiece(new Bishop(Board, Color.White), 'c', 1);
+            //PutPiece(new Knight(Board, Color.White), 'b', 1);
+            //PutPiece(new Bishop(Board, Color.White), 'c', 1);
             PutPiece(new Queen(Board, Color.White), 'd', 1);
             PutPiece(new King(Board, Color.White, this), 'e', 1);
-            PutPiece(new Bishop(Board, Color.White), 'f', 1);
-            PutPiece(new Knight(Board, Color.White), 'g', 1);
+            //PutPiece(new Bishop(Board, Color.White), 'f', 1);
+            //PutPiece(new Knight(Board, Color.White), 'g', 1);
             PutPiece(new Rook(Board, Color.White), 'h', 1);
             PutPiece(new Pawn(Board, Color.White, this), 'a', 2);
             PutPiece(new Pawn(Board, Color.White, this), 'b', 2);
@@ -410,7 +415,7 @@ namespace chess
             PutPiece(new Pawn(Board, Color.White, this), 'e', 2);
             PutPiece(new Pawn(Board, Color.White, this), 'f', 2);
             PutPiece(new Pawn(Board, Color.White, this), 'g', 2);
-            PutPiece(new Pawn(Board, Color.White, this), 'h', 2);
+            PutPiece(new Pawn(Board, Color.White, this), 'c', 6);
         }
 
         /// <summary>

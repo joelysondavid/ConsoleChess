@@ -1,5 +1,7 @@
 ﻿using board;
+using ConsoleChess;
 using System;
+using System.Text;
 
 namespace chess
 {
@@ -159,21 +161,37 @@ namespace chess
                     {
                         Position pos = Position;
                         Board.RemovePiece(Position);
+                        StringBuilder text = new StringBuilder();
                         switch (promotion)
                         {
                             case Promotions.T:
-                                Board.PutPiece(new Rook(Board, color), pos);
+                                Rook rook = new Rook(Board, color);
+                                Board.PutPiece(rook, pos);
+                                text.AppendLine(string.Concat("Promote pawn to: ", rook.GetType()));
+                                text.AppendLine(string.Concat("ChessPosition: ", rook.Position.ToChessPosition(), " CanvasPosition(Column, Row): ", rook.Position.Column, ", ", rook.Position.Row));
+
                                 break;
                             case Promotions.B:
-                                Board.PutPiece(new Bishop(Board, color), pos);
+                                Bishop bishop = new Bishop(Board, color);
+                                Board.PutPiece(bishop, pos);
+                                text.AppendLine(string.Concat("Promote pawn to: ", bishop.GetType()));
+                                text.AppendLine(string.Concat("ChessPosition: ", bishop.Position.ToChessPosition(), " CanvasPosition(Column, Row): ", bishop.Position.Column, ", ", bishop.Position.Row));
                                 break;
                             case Promotions.N:
-                                Board.PutPiece(new Knight(Board, color), pos);
+                                Knight knight = new Knight(Board, color);
+                                Board.PutPiece(knight, pos);
+                                text.AppendLine(string.Concat("Promote pawn to: ", knight.GetType()));
+                                text.AppendLine(string.Concat("ChessPosition: ", knight.Position.ToChessPosition(), " CanvasPosition(Column, Row): ", knight.Position.Column, ", ", knight.Position.Row));
                                 break;
                             case Promotions.Q:
-                                Board.PutPiece(new Queen(Board, color), pos);
+                                Queen queen = new Queen(Board, color);
+                                Board.PutPiece(queen, pos);
+                                text.AppendLine(string.Concat("Promote pawn to: ", queen.GetType()));
+                                text.AppendLine(string.Concat("ChessPosition: ", queen.Position.ToChessPosition(), " CanvasPosition(Column, Row): ", queen.Position.Column, ", ", queen.Position.Row));
                                 break;
                         }
+                        text.AppendLine(string.Concat("Color: ", color));
+                        WriteLog.ChecksLogs(text);
                     }
                     else
                         throw new BoardException("Invalid promotion");

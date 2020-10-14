@@ -5,14 +5,14 @@ namespace chess
     /// <summary>
     /// Tower
     /// </summary>
-    public class Tower : Piece
+    public class Rook : Piece
     {
         /// <summary>
         /// Simple constructor
         /// </summary>
         /// <param name="board">Board</param>
         /// <param name="color">Color of piece</param>
-        public Tower(Board board, Color color) : base(board, color) { }
+        public Rook(Board board, Color color) : base(board, color) { }
 
         /// <summary>
         /// To string override

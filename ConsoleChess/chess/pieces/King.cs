@@ -151,7 +151,7 @@ namespace chess
             {
                 Piece piece = Board.Piece(position);
 
-                return piece != null && piece is Tower && piece.NumberOfMovements == 0 && piece.Color == Color;
+                return piece != null && piece is Rook && piece.NumberOfMovements == 0 && piece.Color == Color;
             }
             return false;
         }

@@ -164,6 +164,9 @@ namespace chess
             if (Board.Piece(target) != null && Board.Piece(target) is Pawn && origin.Column != target.Column && capturedPiece == null)
                 capturedPiece = ExecuteEnPassant(Board.Piece(target), origin);
 
+            if (capturedPiece != null)
+                CapturedPieces.Add(capturedPiece);
+
             return capturedPiece;
         }
 

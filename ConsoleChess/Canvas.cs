@@ -135,6 +135,9 @@ namespace ConsoleChess
         {
             string positionString = Console.ReadLine();
 
+            if (positionString.Length < 2)
+                throw new BoardException("Invalid position!");
+
             char col = positionString[0];
             int line = 0;
 
